@@ -34,14 +34,18 @@ class BinaryHeap {
         m_value_index_map[m_array[index1].second] = index0;
     }
 
+    void updateFinalIndex(std::size_t index, const KeyValue &keyvalue) {
+        m_array[index] = keyvalue;
+        m_value_index_map[m_array[index].second] = index;
+    }
+
     void decreaseKey(size_t index) {
         KeyValue keyvalue = m_array[index];
         while (index != 0 && m_compare(m_array[index].first, m_array[parent(index)].first)) {
             swapIndex(index, parent(index));
             index = parent(index);
         }
-        m_array[index] = keyvalue;
-        m_value_index_map[keyvalue.second] = index;
+        updateFinalIndex(index, keyvalue);
     }
 
 public:
@@ -83,8 +87,7 @@ public:
             swapIndex(index, parent(index));
             index = parent(index);
         }
-        m_array[index] = KeyValue(key, value);
-        m_value_index_map[value] = index;
+        updateFinalIndex(index, KeyValue(key, value));
     }
 
     void heapify(std::size_t index) {
@@ -106,8 +109,7 @@ public:
                 break;
             }
         }
-        m_array[index] = keyvalue;
-        m_value_index_map[keyvalue.second] = index;
+        updateFinalIndex(index, keyvalue);
     }
 
     void updateKey(const PriorityKey &key, const Value &value) {
